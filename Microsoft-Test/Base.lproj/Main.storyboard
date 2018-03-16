@@ -19,8 +19,15 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="vDZ-qy-nlG">
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="44" id="pYW-C2-utu"/>
+                                </constraints>
+                            </view>
                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="1VD-GW-WWQ">
-                                <rect key="frame" x="0.0" y="0.0" width="375" height="350"/>
+                                <rect key="frame" x="0.0" y="44" width="375" height="350"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="350" id="ea1-uc-Dsw"/>
@@ -60,17 +67,20 @@
                                 </cells>
                             </collectionView>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="86i-gX-d0y">
-                                <rect key="frame" x="0.0" y="350" width="375" height="317"/>
+                                <rect key="frame" x="0.0" y="394" width="375" height="273"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                             </tableView>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
                             <constraint firstItem="1VD-GW-WWQ" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="9ep-tt-Dpt"/>
+                            <constraint firstItem="vDZ-qy-nlG" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="top" id="EA6-nO-rRV"/>
                             <constraint firstItem="86i-gX-d0y" firstAttribute="bottom" secondItem="6Tk-OE-BBY" secondAttribute="bottom" id="EpK-eB-mDy"/>
                             <constraint firstItem="86i-gX-d0y" firstAttribute="trailing" secondItem="6Tk-OE-BBY" secondAttribute="trailing" id="Wqb-6E-jaQ"/>
                             <constraint firstItem="86i-gX-d0y" firstAttribute="top" secondItem="1VD-GW-WWQ" secondAttribute="bottom" id="X2N-Ck-TJw"/>
-                            <constraint firstItem="1VD-GW-WWQ" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="top" id="e9m-uc-ay3"/>
+                            <constraint firstItem="1VD-GW-WWQ" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="top" constant="44" id="e9m-uc-ay3"/>
+                            <constraint firstItem="vDZ-qy-nlG" firstAttribute="trailing" secondItem="6Tk-OE-BBY" secondAttribute="trailing" id="eZB-Ga-DUO"/>
+                            <constraint firstItem="vDZ-qy-nlG" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="fF5-m5-VlF"/>
                             <constraint firstItem="86i-gX-d0y" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="fdU-3z-OLg"/>
                             <constraint firstItem="1VD-GW-WWQ" firstAttribute="trailing" secondItem="6Tk-OE-BBY" secondAttribute="trailing" id="kO7-hg-Ayw"/>
                         </constraints>
@@ -79,6 +89,7 @@
                     <connections>
                         <outlet property="collectionView" destination="1VD-GW-WWQ" id="eNF-YG-jUy"/>
                         <outlet property="tableView" destination="86i-gX-d0y" id="LIp-EY-DjO"/>
+                        <outlet property="weekdaysLabel" destination="vDZ-qy-nlG" id="oeF-gx-xfU"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>

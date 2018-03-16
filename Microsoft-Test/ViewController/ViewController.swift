@@ -12,6 +12,7 @@ class ViewController: UIViewController{
 
     @IBOutlet weak var collectionView: UICollectionView!
     @IBOutlet weak var tableView: UITableView!
+    @IBOutlet weak var weekdaysLabel: UIView!
     fileprivate let sectionInsets = UIEdgeInsets(top: 1.0, left: 1.0, bottom: 0.0, right: 1.0)
     fileprivate let itemsPerRow: CGFloat = 7
 
@@ -19,54 +20,39 @@ class ViewController: UIViewController{
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.initialSetup()
+    }
+    
+    func initialSetup(){
         collectionView.dataSource = self
         collectionView.delegate = self
+        
+        // Draw the weekday label
+        let weekDays = ["S", "M", "T", "W", "T", "F", "S"]
+        let eachWidth = UIScreen.main.bounds.size.width/7
+        
+        var xOffset:CGFloat = 0.0
+        for eachWeekday in weekDays{
+            let label = UILabel(frame: CGRect(x:Int(xOffset), y:0, width: Int(eachWidth), height: 44))
+            label.text = eachWeekday
+            label.textAlignment = .center
+            self.weekdaysLabel.addSubview(label)
+            xOffset = xOffset + eachWidth
+        }
+        
+        //Update calendar collection view
+        viewModel.calendarRows = viewModel.getYearData(date: Date())
+        self.collectionView.reloadData()
+        
     }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
+    
 
 }
 
-extension ViewController: UICollectionViewDataSource {
 
-    func collectionView(_ collectionView: UICollectionView,
-                                 numberOfItemsInSection section: Int) -> Int {
-        return 67
-    }
-    
-     func collectionView(_ collectionView: UICollectionView,
-                                 cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "CalendarTableViewCell",for: indexPath) as! CalendarTableViewCell
-        cell.dateLabel.text = String(1)
-        cell.backgroundColor = UIColor.red
-        return cell
-    }
-}
-
-extension ViewController : UICollectionViewDelegateFlowLayout {
-    func collectionView(_ collectionView: UICollectionView,
-                        layout collectionViewLayout: UICollectionViewLayout,
-                        sizeForItemAt indexPath: IndexPath) -> CGSize {
-        let paddingSpace = sectionInsets.left * (itemsPerRow + 1)
-        let availableWidth = UIScreen.main.bounds.size.width - paddingSpace
-        let widthPerItem = availableWidth / itemsPerRow
-        
-        return CGSize(width: widthPerItem, height: widthPerItem)
-    }
-    
-    func collectionView(_ collectionView: UICollectionView,
-                        layout collectionViewLayout: UICollectionViewLayout,
-                        insetForSectionAt section: Int) -> UIEdgeInsets {
-        return sectionInsets
-    }
-    
-    func collectionView(_ collectionView: UICollectionView,
-                        layout collectionViewLayout: UICollectionViewLayout,
-                        minimumLineSpacingForSectionAt section: Int) -> CGFloat {
-        return sectionInsets.left
-    }
-}
 
