@@ -23,7 +23,16 @@ extension ViewController: UICollectionViewDataSource {
                         cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "CalendarTableViewCell",for: indexPath) as! CalendarTableViewCell
         let eachDate = viewModel.calendarRows[indexPath.row]
-        cell.dateLabel.text = String(eachDate.day)
+        cell.dateLabel.text = String("\(eachDate.day).\(eachDate.month)")
+        if eachDate.selected == true{
+            cell.dateLabel.backgroundColor = UIColor.blue
+            cell.dateLabel.textColor = UIColor.white
+            print("Drawing selected")
+            eachDate.printDate()
+        }else{
+            cell.dateLabel.backgroundColor = UIColor.white
+            cell.dateLabel.textColor = UIColor.black
+        }
         return cell
     }
 }
@@ -32,12 +41,32 @@ extension ViewController: UICollectionViewDelegate{
     func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
         if indexPath.row == (viewModel.calendarRows.count - 1){
             print("Reached end")
-            let path = IndexPath(row: 20, section: 0)
-            collectionView.scrollToItem(at: path, at: .top, animated: true)
         }
         if indexPath.row == 0{
             print("First")
         }
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        
+        print("selectedDate")
+
+        let selectedDate = viewModel.calendarRows[indexPath.row]
+        selectedDate.selected = true
+        
+        selectedDate.printDate()
+        
+        print("oldDate")
+
+        let oldDate = viewModel.currentDate
+        oldDate.selected = false
+        
+        oldDate.printDate()
+        
+        viewModel.currentDate  = selectedDate
+
+        
+        collectionView.reloadData()
     }
 }
 

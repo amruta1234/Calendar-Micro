@@ -20,10 +20,27 @@ class ViewController: UIViewController{
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.initialSetup()
+        setupCollectionView()
+        setupTableView()
     }
     
-    func initialSetup(){
+    override func viewWillAppear(_ animated: Bool) {
+        self.viewModel.requestAccessForCalendar()
+    }
+    
+    func setupTableView(){
+        self.tableView.register(UINib(nibName:"EventTableViewCell", bundle: nil), forCellReuseIdentifier: "eventCell")
+        self.tableView.delegate = self
+        self.tableView.dataSource = self
+    
+        
+        if let path = viewModel.getOffsetForDate(date: Date()){
+            let eventPath = IndexPath(row: 0, section: path.row)
+            self.tableView.scrollToRow(at: eventPath, at: .top, animated: true)
+        }
+    }
+    
+    func setupCollectionView(){
         collectionView.dataSource = self
         collectionView.delegate = self
         
@@ -40,12 +57,25 @@ class ViewController: UIViewController{
             xOffset = xOffset + eachWidth
         }
         
-        //Update calendar collection view
-        viewModel.calendarRows = viewModel.getYearData(date: Date())
-        self.collectionView.reloadData()
-        
+        //Show the current date
+        self.reloadCalendarView(date: Date())
     }
-
+    
+    //Update calendar collection view
+    func reloadCalendarView(date: Date){
+        viewModel.calendarRows = viewModel.getYearData(date: date)
+        self.collectionView.reloadData()
+        self.offsetCalendarView(date: date)
+    }
+    
+    func offsetCalendarView(date: Date){
+        if let path = viewModel.getOffsetForDate(date: date){
+            collectionView.layoutIfNeeded()
+            collectionView.scrollToItem(at: path, at: .centeredVertically, animated: true)
+        }
+    }
+    
+   
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.

@@ -11,5 +11,4 @@ import UIKit
 
 class CalendarTableViewCell: UICollectionViewCell{
     @IBOutlet weak var dateLabel: UILabel!
-    
 }

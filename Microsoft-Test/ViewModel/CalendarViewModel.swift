@@ -13,6 +13,7 @@ import EventKitUI
 class CalendarViewModel{
     var eventStore =  EKEventStore()
     var calendarRows = [CalendarDisplay]()
+    var currentDate = CalendarDisplay(date: Date())
 
     func requestAccessForCalendar(){
         self.eventStore.requestAccess(to: .event) { (permission, error) in
@@ -22,6 +23,20 @@ class CalendarViewModel{
                 print("Not granted")
             }
         }
+    }
+    
+    func fetchEvents(date:Date) -> [EventDisplay]{
+        let calendars = self.eventStore.calendars(for: .event)
+        let predicate = self.eventStore.predicateForEvents(withStart: date, end: date, calendars:calendars)
+        let events = self.eventStore.events(matching: predicate)
+        
+        var eventsList = [EventDisplay]()
+        for eachEvent in events{
+            let newDisplay = EventDisplay(title: eachEvent.title, image: "", time:eachEvent.startDate.description)
+            print("Event - \(newDisplay.title)")
+            eventsList.append(newDisplay)
+        }
+        return eventsList
     }
     
     func getYearData(date: Date) -> [CalendarDisplay]{
@@ -42,7 +57,10 @@ class CalendarViewModel{
         for month in 1...12{
             let n = getNumberOfDaysInMonth(month: month, year: presentYear)
             for date in 1...n{
-                let newDate = CalendarDisplay(day: date, month: month, year: presentYear    )
+                var newDate = CalendarDisplay(day: date, month: month, year: presentYear    )
+                if newDate == currentDate{
+                    newDate.selected = true
+                }
                 calendarRows.append(newDate)
             }
         }
@@ -69,12 +87,16 @@ class CalendarViewModel{
         let currentDay = Calendar.current.component(.day, from: date)
         let currentMonth = Calendar.current.component(.month, from: date)
         let currentYear = Calendar.current.component(.year, from: date)
-        
+
         let row = calendarRows.index { (date) -> Bool in
             date.day == currentDay && date.month == currentMonth && date.year == currentYear
         }
-        let path = IndexPath(row: row!, section: 0)
-        return path
+        if let rows = row{
+            let path = IndexPath(row: rows, section: 0)
+            return path
+        }
+        return nil
     }
     
 }
+
