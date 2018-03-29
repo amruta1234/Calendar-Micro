@@ -32,9 +32,13 @@ class ViewController: UIViewController{
         self.tableView.register(UINib(nibName:"EventTableViewCell", bundle: nil), forCellReuseIdentifier: "eventCell")
         self.tableView.delegate = self
         self.tableView.dataSource = self
+        if let date = viewModel.currentDate.date{
+            offsetTableView(date: date)
+        }
+    }
     
-        
-        if let path = viewModel.getOffsetForDate(date: Date()){
+    func offsetTableView(date:Date){
+        if let path = viewModel.getOffsetForDate(date: date){
             let eventPath = IndexPath(row: 0, section: path.row)
             self.tableView.scrollToRow(at: eventPath, at: .top, animated: true)
         }
@@ -58,14 +62,16 @@ class ViewController: UIViewController{
         }
         
         //Show the current date
-        self.reloadCalendarView(date: Date())
+        if let date = viewModel.currentDate.date{
+            self.reloadCalendarView(date: date)
+            self.offsetCalendarView(date: date)
+        }
     }
     
     //Update calendar collection view
     func reloadCalendarView(date: Date){
         viewModel.calendarRows = viewModel.getYearData(date: date)
         self.collectionView.reloadData()
-        self.offsetCalendarView(date: date)
     }
     
     func offsetCalendarView(date: Date){
@@ -75,7 +81,28 @@ class ViewController: UIViewController{
         }
     }
     
+    //Delegate callbacks
+    func currentdateChangeCollectionView(_ date:CalendarDisplay){
+        if let newDate = date.date{
+            viewModel.currentDate.selected = false
+            date.selected = true
+            viewModel.currentDate = date
+            offsetCalendarView(date: newDate)
+            //TODO: only reload the cells not whole table view
+            self.collectionView.reloadData()
+        }
+    }
    
+    
+    func currentDateChangeTableView(_ date:CalendarDisplay){
+        if let newDate = date.date{
+            viewModel.currentDate.selected = false
+            date.selected = true
+            viewModel.currentDate = date
+            offsetTableView(date: newDate)
+        }
+    }
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.

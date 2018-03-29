@@ -25,16 +25,24 @@ class CalendarViewModel{
         }
     }
     
-    func fetchEvents(date:Date) -> [EventDisplay]{
-        let calendars = self.eventStore.calendars(for: .event)
-        let predicate = self.eventStore.predicateForEvents(withStart: date, end: date, calendars:calendars)
-        let events = self.eventStore.events(matching: predicate)
-        
+    func fetchEvents(_ currentdate:CalendarDisplay) -> [EventDisplay]{
         var eventsList = [EventDisplay]()
-        for eachEvent in events{
-            let newDisplay = EventDisplay(title: eachEvent.title, image: "", time:eachEvent.startDate.description)
-            print("Event - \(newDisplay.title)")
-            eventsList.append(newDisplay)
+
+        if let date = currentdate.date{
+            let calendars = self.eventStore.calendars(for: .event)
+            
+            let next = Calendar.current.date(byAdding: .day, value: 1, to: date)
+            
+            let predicate = self.eventStore.predicateForEvents(withStart: date, end: next!, calendars:calendars)
+            let events = self.eventStore.events(matching: predicate)
+            
+            for eachEvent in events{
+                let newDisplay = EventDisplay(title: eachEvent.title, image: "", time:eachEvent.startDate.description)
+                eventsList.append(newDisplay)
+            }
+            if eventsList.count == 0{
+                eventsList.append(EventDisplay(title: "None", image: "", time: ""))
+            }
         }
         return eventsList
     }
@@ -57,9 +65,11 @@ class CalendarViewModel{
         for month in 1...12{
             let n = getNumberOfDaysInMonth(month: month, year: presentYear)
             for date in 1...n{
-                var newDate = CalendarDisplay(day: date, month: month, year: presentYear    )
+                let newDate = CalendarDisplay(day: date, month: month, year: presentYear    )
+                newDate.events = self.fetchEvents(newDate)
                 if newDate == currentDate{
                     newDate.selected = true
+                    self.currentDate = newDate
                 }
                 calendarRows.append(newDate)
             }

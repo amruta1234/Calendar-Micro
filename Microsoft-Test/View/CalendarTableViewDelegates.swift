@@ -48,6 +48,7 @@ extension ViewController: UITableViewDelegate{
     
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
         let date = viewModel.calendarRows[indexPath.section]
-
+        self.currentdateChangeCollectionView(date)
     }
+    
 }

@@ -14,12 +14,14 @@ class CalendarDisplay{
     var year:Int
     var selected = false
     var events = [EventDisplay]()
+    var date:Date?
     
     init(day:Int, month:Int , year:Int) {
         self.day = day
         self.month = month
         self.year = year
         self.events.append(emptyEvent())
+        self.date = getDate(day: day, month: month, year: year)
     }
     
     init(date: Date) {
@@ -27,6 +29,14 @@ class CalendarDisplay{
         self.month = Calendar.current.component(.month, from: date)
         self.year = Calendar.current.component(.year, from: date)
         self.events.append(emptyEvent())
+        self.date = date
+    }
+    
+    func getDate(day:Int, month:Int , year:Int) -> Date?{
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy/MM/dd HH:mm:ss"
+        let date = formatter.date(from: "\(year)/\(month)/\(day) 00:00:00")
+        return date
     }
     
     func emptyEvent() -> EventDisplay{
