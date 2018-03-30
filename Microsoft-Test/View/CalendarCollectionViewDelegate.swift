@@ -27,8 +27,7 @@ extension ViewController: UICollectionViewDataSource {
         if eachDate.selected == true{
             cell.dateLabel.backgroundColor = UIColor.blue
             cell.dateLabel.textColor = UIColor.white
-            print("Drawing selected")
-            eachDate.printDate()
+
         }else{
             cell.dateLabel.backgroundColor = UIColor.white
             cell.dateLabel.textColor = UIColor.black
@@ -39,12 +38,6 @@ extension ViewController: UICollectionViewDataSource {
 
 extension ViewController: UICollectionViewDelegate{
     func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
-        if indexPath.row == (viewModel.calendarRows.count - 1){
-            print("Reached end")
-        }
-        if indexPath.row == 0{
-            print("First")
-        }
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {

@@ -9,6 +9,29 @@
 			<key>orderHint</key>
 			<integer>0</integer>
 		</dict>
+		<key>Microsoft-Unit-Tests.xcscheme</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>1</integer>
+		</dict>
+	</dict>
+	<key>SuppressBuildableAutocreation</key>
+	<dict>
+		<key>8445F4552056D5D7007CB13A</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>84628E47206D09930055C671</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>84628E55206D09E40055C671</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
 	</dict>
 </dict>
 </plist>

@@ -10,41 +10,33 @@ import Foundation
 import EventKit
 import EventKitUI
 
+protocol ViewControllerCallbacks: AnyObject{
+    func showCalendarPermissionAlert()
+}
+
 class CalendarViewModel{
-    var eventStore =  EKEventStore()
+    
     var calendarRows = [CalendarDisplay]()
     var currentDate = CalendarDisplay(date: Date())
-
+    
+    var eventStore: IEventStore
+    
+    weak var delegate:ViewControllerCallbacks?
+    
+    init(eventStore: IEventStore) {
+        self.eventStore = eventStore
+    }
+    
     func requestAccessForCalendar(){
-        self.eventStore.requestAccess(to: .event) { (permission, error) in
-            if permission == true{
-                print("Granted")
-            }else{
-                print("Not granted")
+        eventStore.requestAccessToCalendar { (permission) in
+            if permission != true{
+                self.delegate?.showCalendarPermissionAlert()
             }
         }
     }
     
     func fetchEvents(_ currentdate:CalendarDisplay) -> [EventDisplay]{
-        var eventsList = [EventDisplay]()
-
-        if let date = currentdate.date{
-            let calendars = self.eventStore.calendars(for: .event)
-            
-            let next = Calendar.current.date(byAdding: .day, value: 1, to: date)
-            
-            let predicate = self.eventStore.predicateForEvents(withStart: date, end: next!, calendars:calendars)
-            let events = self.eventStore.events(matching: predicate)
-            
-            for eachEvent in events{
-                let newDisplay = EventDisplay(title: eachEvent.title, image: "", time:eachEvent.startDate.description)
-                eventsList.append(newDisplay)
-            }
-            if eventsList.count == 0{
-                eventsList.append(EventDisplay(title: "None", image: "", time: ""))
-            }
-        }
-        return eventsList
+        return eventStore.fetchEvents(currentdate)
     }
     
     func getYearData(date: Date) -> [CalendarDisplay]{
@@ -70,6 +62,7 @@ class CalendarViewModel{
                 if newDate == currentDate{
                     newDate.selected = true
                     self.currentDate = newDate
+                    print("View model set date \(currentDate.date)")
                 }
                 calendarRows.append(newDate)
             }
@@ -90,6 +83,7 @@ class CalendarViewModel{
     
     func getWeekdayForFirstDate(date:Date) -> Int{
         let weekdate =  Calendar.current.date(from: Calendar.current.dateComponents([.year,.month], from: date))!
+        print(Calendar.current.component(.weekday, from: weekdate))
         return Calendar.current.component(.weekday, from: weekdate)
     }
     

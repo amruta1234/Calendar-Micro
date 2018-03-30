@@ -16,10 +16,12 @@ class ViewController: UIViewController{
     fileprivate let sectionInsets = UIEdgeInsets(top: 1.0, left: 1.0, bottom: 0.0, right: 1.0)
     fileprivate let itemsPerRow: CGFloat = 7
 
-    var viewModel:CalendarViewModel = CalendarViewModel()
+
+    var viewModel:CalendarViewModel = CalendarViewModel(eventStore: EventStore())
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        viewModel.delegate = self
         setupCollectionView()
         setupTableView()
     }
@@ -107,9 +109,16 @@ class ViewController: UIViewController{
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
-    
 
 }
+
+extension ViewController: ViewControllerCallbacks{
+    func showCalendarPermissionAlert() {
+        //TODO show alert view controller
+    }
+}
+
+
 
 
 

@@ -42,13 +42,29 @@ extension ViewController: UITableViewDataSource{
 
 extension ViewController: UITableViewDelegate{
     
+    
     func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
         
     }
     
-    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-        let date = viewModel.calendarRows[indexPath.section]
-        self.currentdateChangeCollectionView(date)
+    func tableView(_ tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int) {
+        
     }
     
+    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        
+        if let visible = self.tableView.indexPathsForVisibleRows?.count{
+            if indexPath.section - visible > 0{
+                let date = viewModel.calendarRows[indexPath.section - visible]
+                self.currentdateChangeCollectionView(date)
+            }
+        }
+        
+        
+    }
+
+    
+    
 }
+
+
