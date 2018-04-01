@@ -16,8 +16,25 @@ extension ViewController: UITableViewDataSource{
     }
     
     func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        let date = viewModel.calendarRows[section]
-        return date.getDay()
+        let eachDate = viewModel.calendarRows[section]
+        return eachDate.dateString
+    }
+    
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        let view = UIView(frame: CGRect(x:0, y:0, width:tableView.frame.size.width, height:15))
+        let label = UILabel(frame: CGRect(x:10, y:7, width:tableView.frame.size.width, height:15))
+        label.font = UIFont.systemFont(ofSize: 14)
+        let eachDate = viewModel.calendarRows[section]
+        if eachDate.isToday {
+            label.textColor = Constants.COLORS.selectedColor
+            view.backgroundColor = Constants.COLORS.selectedSectionBGColor
+        } else {
+            label.textColor = Constants.COLORS.preColor
+            view.backgroundColor = Constants.COLORS.sectionBGColor
+        }
+        label.text = eachDate.dateString
+        view.addSubview(label)
+        return view
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -31,6 +48,14 @@ extension ViewController: UITableViewDataSource{
         let event = date.events[indexPath.row]
         let cell = tableView.dequeueReusableCell(withIdentifier: "eventCell", for: indexPath) as! EventTableViewCell
         cell.eventTitle.text = event.title
+        cell.timeLabel.text = String(event.time)
+        if event.allDay {
+            cell.timeLabel.textColor = UIColor.green
+        }else {
+            cell.timeLabel.textColor = UIColor.blue
+        }
+        cell.imageView?.layer.cornerRadius = 10
+        cell.duration.text = event.startTime
         return cell
     }
     

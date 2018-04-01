@@ -9,12 +9,17 @@
 import Foundation
 
 class CalendarDisplay{
-    var day:Int
-    var month:Int
-    var year:Int
+    var day: Int
+    var month: Int
+    var year: Int
     var selected = false
     var events = [EventDisplay]()
-    var date:Date?
+    var date: Date?
+    var isToday: Bool = false
+    var isYesturday: Bool = false
+    var isTomorrow: Bool = false
+    var dateString: String = ""
+    
     
     init(day:Int, month:Int , year:Int) {
         self.day = day
@@ -22,6 +27,13 @@ class CalendarDisplay{
         self.year = year
         self.events.append(emptyEvent())
         self.date = getDate(day: day, month: month, year: year)
+        if let wrappedDate = date {
+            isToday = Calendar.current.isDateInToday(wrappedDate)
+            isYesturday = Calendar.current.isDateInYesterday(wrappedDate)
+            isTomorrow = Calendar.current.isDateInTomorrow(wrappedDate)
+            
+        }
+        dateString = getDayString()
     }
     
     init(date: Date) {
@@ -40,11 +52,35 @@ class CalendarDisplay{
     }
     
     func emptyEvent() -> EventDisplay{
-        return EventDisplay(title: "none", image: "", time: "")
+        return EventDisplay(title: "none", image: "", isAllDay: false)
     }
     
-    func getDay() -> String{
-        return "\(day)-\(month)-\(year)-\(selected)"
+    private func getDayString() -> String {
+        if let currDate = date {
+            
+            let dateFormatter = DateFormatter()
+            dateFormatter.dateFormat = "dd-MM-yyyy"
+            
+            dateFormatter.dateFormat = "EEEE, MMMM dd, yyyy"
+            var currDateString: String = dateFormatter.string(from: currDate)
+            
+            if isToday || isTomorrow || isYesturday {
+                let dateString = currDateString.components(separatedBy: ",")
+                var startString:String = dateString[0]
+                if isToday {
+                    startString = "Today"
+                }else if isYesturday {
+                    startString = "Yesterday"
+                }else if isTomorrow {
+                    startString = "Tomorrow"
+                }
+                currDateString = startString + "," + dateString[1] + "," + dateString[2]
+                
+            }
+            
+            return currDateString
+        }
+        return ""
     }
     
     func printDate(){

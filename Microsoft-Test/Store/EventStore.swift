@@ -42,11 +42,13 @@ class EventStore: IEventStore{
             let events = self.eventStore.events(matching: predicate)
             
             for eachEvent in events{
-                let newDisplay = EventDisplay(title: eachEvent.title, image: "", time:eachEvent.startDate.description)
+                let duration = eachEvent.endDate.timeIntervalSince(eachEvent.startDate)
+                
+                let newDisplay = EventDisplay(title: eachEvent.title, image: "", duration:duration, isAllDay: eachEvent.isAllDay, startTime: eachEvent.startDate)
                 eventsList.append(newDisplay)
             }
             if eventsList.count == 0{
-                eventsList.append(EventDisplay(title: "None", image: "", time: ""))
+                eventsList.append(EventDisplay(title: "None", image: "", isAllDay: false))
             }
         }
         return eventsList

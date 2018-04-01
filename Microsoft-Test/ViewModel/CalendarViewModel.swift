@@ -14,10 +14,12 @@ protocol ViewControllerCallbacks: AnyObject{
     func showCalendarPermissionAlert()
 }
 
-class CalendarViewModel{
+class CalendarViewModel {
     
     var calendarRows = [CalendarDisplay]()
     var currentDate = CalendarDisplay(date: Date())
+    let presentDate = CalendarDisplay(date: Date())
+    
     
     var eventStore: IEventStore
     
@@ -62,7 +64,6 @@ class CalendarViewModel{
                 if newDate == currentDate{
                     newDate.selected = true
                     self.currentDate = newDate
-                    print("View model set date \(currentDate.date)")
                 }
                 calendarRows.append(newDate)
             }

@@ -75,8 +75,8 @@ class CalendarViewModelTests: XCTest{
     //MARK: Helpers
     func getTestEvents() -> [EventDisplay]{
         var events = [EventDisplay]()
-        let event1 = EventDisplay(title: "test1", image: "", time: "")
-        let event2 = EventDisplay(title: "test2", image: "", time: "")
+        let event1 = EventDisplay(title: "test1", image: "")
+        let event2 = EventDisplay(title: "test2", image: "")
         events.append(event1)
         events.append(event2)
         return events

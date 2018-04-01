@@ -56,11 +56,15 @@ class ViewController: UIViewController{
         
         var xOffset:CGFloat = 0.0
         for eachWeekday in weekDays{
-            let label = UILabel(frame: CGRect(x:Int(xOffset), y:0, width: Int(eachWidth), height: 44))
+            let label = UILabel(frame: CGRect(x:Int(xOffset), y:0, width: Int(eachWidth), height: 30))
             label.text = eachWeekday
             label.textAlignment = .center
             self.weekdaysLabel.addSubview(label)
             xOffset = xOffset + eachWidth
+        }
+        
+        if let layout = collectionView.collectionViewLayout as? UICollectionViewFlowLayout {
+            layout.minimumLineSpacing = 0
         }
         
         //Show the current date
@@ -103,6 +107,10 @@ class ViewController: UIViewController{
             viewModel.currentDate = date
             offsetTableView(date: newDate)
         }
+    }
+    
+    func updateHeader(_ headerTxt: String) {
+        self.navigationItem.title = headerTxt
     }
     
     override func didReceiveMemoryWarning() {
