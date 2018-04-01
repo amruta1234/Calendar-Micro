@@ -15,15 +15,17 @@ class ViewController: UIViewController{
     @IBOutlet weak var weekdaysLabel: UIView!
     fileprivate let sectionInsets = UIEdgeInsets(top: 1.0, left: 1.0, bottom: 0.0, right: 1.0)
     fileprivate let itemsPerRow: CGFloat = 7
+    var collectionTap = false
 
 
-    var viewModel:CalendarViewModel = CalendarViewModel(eventStore: EventStore())
+    var viewModel: CalendarViewModel = CalendarViewModel(eventStore: EventStore())
     
     override func viewDidLoad() {
         super.viewDidLoad()
         viewModel.delegate = self
         setupCollectionView()
         setupTableView()
+        
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -83,28 +85,7 @@ class ViewController: UIViewController{
         }
     }
     
-    //Delegate callbacks
-    func currentdateChangeCollectionView(_ date:CalendarDisplay){
-        if let newDate = date.date{
-            viewModel.currentDate.selected = false
-            date.selected = true
-            viewModel.currentDate = date
-            offsetCalendarView(date: newDate)
-            //TODO: only reload the cells not whole table view
-            self.collectionView.reloadData()
-        }
-    }
-   
-    
-    func currentDateChangeTableView(_ date:CalendarDisplay){
-        if let newDate = date.date{
-            viewModel.currentDate.selected = false
-            date.selected = true
-            viewModel.currentDate = date
-            offsetTableView(date: newDate)
-        }
-    }
-    
+
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
@@ -116,9 +97,19 @@ extension ViewController: ViewControllerCallbacks{
     func showCalendarPermissionAlert() {
         //TODO show alert view controller
     }
+    
+    func currentDateUnslectedCallback(){
+        viewModel.currentDate.selected = true
+        if let newDate = viewModel.currentDate.date{
+            offsetCalendarView(date: newDate)
+            self.collectionView.reloadData()
+            offsetTableView(date: newDate)
+        }
+    }
+    
+    func currentDateSelectedCallback(){
+        viewModel.currentDate.selected = false
+        self.collectionView.reloadData()
+        
+    }
 }
-
-
-
-
-

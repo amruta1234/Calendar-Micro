@@ -48,22 +48,42 @@ extension ViewController: UITableViewDelegate{
     }
     
     func tableView(_ tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int) {
-        
     }
     
-    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-        
-        if let visible = self.tableView.indexPathsForVisibleRows?.count{
-            if indexPath.section - visible > 0{
-                let date = viewModel.calendarRows[indexPath.section - visible]
-                self.currentdateChangeCollectionView(date)
+   func getPinnedSection() -> Int?{
+        if tableView.visibleCells.count > 0{
+            if let section = tableView.indexPath(for: tableView.visibleCells[0])?.section{
+                if section < viewModel.calendarRows.count{
+                    return section
+                }
             }
         }
-        
-        
+        return nil
     }
-
     
+    func scrollViewDidEndScrollingAnimation(_ scrollView: UIScrollView) {
+        collectionTap = false
+    }
+    
+    func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
+        if collectionTap == false{
+            if let section = getPinnedSection(){
+                viewModel.currentDate = viewModel.calendarRows[section]
+            }
+        }
+        collectionTap = false
+    }
+    
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        if collectionTap == false{
+            if let section = getPinnedSection(){
+                let date = viewModel.calendarRows[section]
+                if date != viewModel.currentDate{
+                    viewModel.currentDate = date
+                }
+            }
+        }
+    }
     
 }
 

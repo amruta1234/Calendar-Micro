@@ -12,12 +12,21 @@ import EventKitUI
 
 protocol ViewControllerCallbacks: AnyObject{
     func showCalendarPermissionAlert()
+    func currentDateUnslectedCallback()
+    func currentDateSelectedCallback()
 }
 
 class CalendarViewModel{
     
     var calendarRows = [CalendarDisplay]()
-    var currentDate = CalendarDisplay(date: Date())
+    var currentDate = CalendarDisplay(date: Date()){
+        willSet {
+            self.delegate?.currentDateSelectedCallback()
+        }
+        didSet {
+            self.delegate?.currentDateUnslectedCallback()
+        }
+    }
     
     var eventStore: IEventStore
     

@@ -41,8 +41,9 @@ extension ViewController: UICollectionViewDelegate{
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        let eachDate = viewModel.calendarRows[indexPath.row]
-        self.currentDateChangeTableView(eachDate)
+        collectionTap = true
+        print("Selected date:\(viewModel.calendarRows[indexPath.row].date)")
+        viewModel.currentDate = viewModel.calendarRows[indexPath.row]
     }
 }
 

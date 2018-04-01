@@ -14,6 +14,8 @@ class MockViewController: ViewControllerCallbacks{
     func showCalendarPermissionAlert() {
         showCalendarCalled = true
     }
+    func currentDateUnslectedCallback() {}
+    func currentDateSelectedCallback() {}
 }
 
 class CalendarViewModelTests: XCTest{
