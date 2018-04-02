@@ -11,6 +11,7 @@ import EventKit
 
 typealias permissionCallback = (Bool) -> Void
 
+//Protocol for accessing events
 protocol IEventStore {
     func requestAccessToCalendar(callback:@escaping permissionCallback)
     func fetchEvents(_ currentdate:CalendarDisplay) -> [EventDisplay]
@@ -48,7 +49,7 @@ class EventStore: IEventStore {
                 eventsList.append(newDisplay)
             }
             if eventsList.count == 0 {
-                eventsList.append(EventDisplay(title: "None", image: "", isAllDay: false))
+                eventsList.append(EventDisplay(title: "No Events", image: "", isAllDay: false))
             }
         }
         return eventsList

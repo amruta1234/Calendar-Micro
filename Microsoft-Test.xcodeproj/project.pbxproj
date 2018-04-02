@@ -128,12 +128,12 @@
 		8445F4582056D5D7007CB13A /* Microsoft-Test */ = {
 			isa = PBXGroup;
 			children = (
-				85B01FC6206EAC5C00848C9C /* AppHelper */,
 				84628E68206D2E810055C671 /* Store */,
 				84C09133205842300043AE60 /* View */,
 				8445F46D2056D8C8007CB13A /* Model */,
 				8445F46C2056D8BE007CB13A /* ViewController */,
 				8445F46B2056D8B0007CB13A /* ViewModel */,
+				85B01FC6206EAC5C00848C9C /* AppHelper */,
 				8445F4592056D5D7007CB13A /* AppDelegate.swift */,
 				8445F45D2056D5D7007CB13A /* Main.storyboard */,
 				8445F4602056D5D7007CB13A /* Assets.xcassets */,

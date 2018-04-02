@@ -51,7 +51,15 @@ extension ViewController: UITableViewDataSource {
         let event = date.events[indexPath.row]
         let cell = tableView.dequeueReusableCell(withIdentifier: "eventCell", for: indexPath) as! EventTableViewCell
         cell.eventTitle.text = event.title
-        cell.timeLabel.text = String(event.time)
+        
+        if event.time != "0" {
+            cell.timeLabel.text = String(event.time)
+            cell.eventTitle.textColor = UIColor.black
+        }else{
+             cell.timeLabel.text = ""
+            cell.eventTitle.textColor = UIColor.lightGray
+        }
+        
         if event.allDay {
             cell.timeLabel.textColor = UIColor.green
         }else {
