@@ -9,7 +9,7 @@
 import Foundation
 import UIKit
 
-class EventTableViewCell: UITableViewCell{
+class EventTableViewCell: UITableViewCell {
     @IBOutlet weak var timeLabel: UILabel!
     
     @IBOutlet weak var duration: UILabel!

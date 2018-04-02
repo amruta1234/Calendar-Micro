@@ -9,13 +9,13 @@
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "Microsoft-Test/View/CalendarCollectionViewDelegate.swift"
-            timestampString = "544331206.818549"
+            filePath = "Microsoft-Test/Store/EventStore.swift"
+            timestampString = "544242006.59549"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "32"
-            endingLineNumber = "32"
-            landmarkName = "collectionView(_:cellForItemAt:)"
+            startingLineNumber = "47"
+            endingLineNumber = "47"
+            landmarkName = "fetchEvents(_:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>

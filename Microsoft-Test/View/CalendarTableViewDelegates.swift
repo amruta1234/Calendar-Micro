@@ -9,18 +9,38 @@
 import Foundation
 import UIKit
 
-extension ViewController: UITableViewDataSource{
+extension ViewController: UITableViewDataSource {
     
     func numberOfSections(in tableView: UITableView) -> Int {
         return viewModel.calendarRows.count
     }
     
     func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        let date = viewModel.calendarRows[section]
-        return date.getDay()
+        
+        let eachDate = viewModel.calendarRows[section]
+        return eachDate.dateString
+    }
+    
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        
+        let view = UIView(frame: CGRect(x:0, y:0, width:tableView.frame.size.width, height:15))
+        let label = UILabel(frame: CGRect(x:10, y:7, width:tableView.frame.size.width, height:15))
+        label.font = UIFont.systemFont(ofSize: 14)
+        let eachDate = viewModel.calendarRows[section]
+        if eachDate.isToday {
+            label.textColor = Constants.COLORS.selectedColor
+            view.backgroundColor = Constants.COLORS.selectedSectionBGColor
+        } else {
+            label.textColor = Constants.COLORS.preColor
+            view.backgroundColor = Constants.COLORS.sectionBGColor
+        }
+        label.text = eachDate.dateString
+        view.addSubview(label)
+        return view
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        
         let date = viewModel.calendarRows[section]
         return date.events.count
     }
@@ -31,6 +51,14 @@ extension ViewController: UITableViewDataSource{
         let event = date.events[indexPath.row]
         let cell = tableView.dequeueReusableCell(withIdentifier: "eventCell", for: indexPath) as! EventTableViewCell
         cell.eventTitle.text = event.title
+        cell.timeLabel.text = String(event.time)
+        if event.allDay {
+            cell.timeLabel.textColor = UIColor.green
+        }else {
+            cell.timeLabel.textColor = UIColor.blue
+        }
+        cell.imageView?.layer.cornerRadius = 10
+        cell.duration.text = event.startTime
         return cell
     }
     
@@ -40,7 +68,7 @@ extension ViewController: UITableViewDataSource{
     
 }
 
-extension ViewController: UITableViewDelegate{
+extension ViewController: UITableViewDelegate {
     
     
     func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
@@ -50,10 +78,11 @@ extension ViewController: UITableViewDelegate{
     func tableView(_ tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int) {
     }
     
-   func getPinnedSection() -> Int?{
-        if tableView.visibleCells.count > 0{
-            if let section = tableView.indexPath(for: tableView.visibleCells[0])?.section{
-                if section < viewModel.calendarRows.count{
+   func getPinnedSection() -> Int? {
+    
+        if tableView.visibleCells.count > 0 {
+            if let section = tableView.indexPath(for: tableView.visibleCells[0])?.section {
+                if section < viewModel.calendarRows.count {
                     return section
                 }
             }
@@ -66,6 +95,7 @@ extension ViewController: UITableViewDelegate{
     }
     
     func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
+ 
         if collectionTap == false{
             if let section = getPinnedSection(){
                 viewModel.currentDate = viewModel.calendarRows[section]
@@ -75,6 +105,7 @@ extension ViewController: UITableViewDelegate{
     }
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        
         if collectionTap == false{
             if let section = getPinnedSection(){
                 let date = viewModel.calendarRows[section]
@@ -86,5 +117,3 @@ extension ViewController: UITableViewDelegate{
     }
     
 }
-
-

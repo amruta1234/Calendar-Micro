@@ -8,10 +8,11 @@
 
 import Foundation
 
-class MockEventStore: IEventStore{
+class MockEventStore: IEventStore {
     
     var permission:((Bool) -> Void)?
     var mockEvents:[EventDisplay] = [EventDisplay]()
+    
     
     func requestAccessToCalendar(callback: @escaping (Bool) -> Void) {
         permission = callback

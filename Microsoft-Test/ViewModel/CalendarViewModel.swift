@@ -16,7 +16,7 @@ protocol ViewControllerCallbacks: AnyObject{
     func currentDateSelectedCallback()
 }
 
-class CalendarViewModel{
+class CalendarViewModel {
     
     var calendarRows = [CalendarDisplay]()
     var currentDate = CalendarDisplay(date: Date()){
@@ -27,7 +27,7 @@ class CalendarViewModel{
             self.delegate?.currentDateUnslectedCallback()
         }
     }
-    
+    let presentDate = CalendarDisplay(date: Date())
     var eventStore: IEventStore
     
     weak var delegate:ViewControllerCallbacks?
@@ -36,19 +36,19 @@ class CalendarViewModel{
         self.eventStore = eventStore
     }
     
-    func requestAccessForCalendar(){
+    func requestAccessForCalendar() {
         eventStore.requestAccessToCalendar { (permission) in
-            if permission != true{
+            if permission != true {
                 self.delegate?.showCalendarPermissionAlert()
             }
         }
     }
     
-    func fetchEvents(_ currentdate:CalendarDisplay) -> [EventDisplay]{
+    func fetchEvents(_ currentdate:CalendarDisplay) -> [EventDisplay] {
         return eventStore.fetchEvents(currentdate)
     }
     
-    func getYearData(date: Date) -> [CalendarDisplay]{
+    func getYearData(date: Date) -> [CalendarDisplay] {
         var calendarRows = [CalendarDisplay]()
         
         let presentYear = Calendar.current.component(.year, from: date)
@@ -58,20 +58,19 @@ class CalendarViewModel{
         let firstDate = formatter.date(from: "\(presentYear)/01/01")
         let firtweekday = self.getWeekdayForFirstDate(date: firstDate!)
         
-        for _  in 1...(firtweekday - 1){
+        for _  in 1...(firtweekday - 1) {
             let newDate = CalendarDisplay(day: 0, month: 0, year: 0)
             calendarRows.append(newDate)
         }
         
-        for month in 1...12{
+        for month in 1...12 {
             let n = getNumberOfDaysInMonth(month: month, year: presentYear)
-            for date in 1...n{
-                let newDate = CalendarDisplay(day: date, month: month, year: presentYear    )
+            for date in 1...n {
+                let newDate = CalendarDisplay(day: date, month: month, year: presentYear)
                 newDate.events = self.fetchEvents(newDate)
-                if newDate == currentDate{
+                if newDate == currentDate {
                     newDate.selected = true
                     self.currentDate = newDate
-                    print("View model set date \(currentDate.date)")
                 }
                 calendarRows.append(newDate)
             }
@@ -79,24 +78,24 @@ class CalendarViewModel{
         return calendarRows
     }
     
-    func getNumberOfDaysInMonth(month: Int, year: Int) -> Int{
-        if month > 12{
+    func getNumberOfDaysInMonth(month: Int, year: Int) -> Int {
+        if month > 12 {
             return 0
         }
         var numOfDaysInMonth = [31,28,31,30,31,30,31,31,30,31,30,31]
-        if year % 4 == 0 && month == 2{
+        if year % 4 == 0 && month == 2 {
             numOfDaysInMonth[2] = 29
         }
         return numOfDaysInMonth[month - 1]
     }
     
-    func getWeekdayForFirstDate(date:Date) -> Int{
+    func getWeekdayForFirstDate(date:Date) -> Int {
         let weekdate =  Calendar.current.date(from: Calendar.current.dateComponents([.year,.month], from: date))!
         print(Calendar.current.component(.weekday, from: weekdate))
         return Calendar.current.component(.weekday, from: weekdate)
     }
     
-    func getOffsetForDate(date:Date) -> IndexPath?{
+    func getOffsetForDate(date:Date) -> IndexPath? {
         let currentDay = Calendar.current.component(.day, from: date)
         let currentMonth = Calendar.current.component(.month, from: date)
         let currentYear = Calendar.current.component(.year, from: date)
@@ -104,12 +103,10 @@ class CalendarViewModel{
         let row = calendarRows.index { (date) -> Bool in
             date.day == currentDay && date.month == currentMonth && date.year == currentYear
         }
-        if let rows = row{
+        if let rows = row {
             let path = IndexPath(row: rows, section: 0)
             return path
         }
         return nil
     }
-    
 }
-

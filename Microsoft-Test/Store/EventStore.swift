@@ -17,23 +17,23 @@ protocol IEventStore {
 }
 
 
-class EventStore: IEventStore{
+class EventStore: IEventStore {
     var eventStore =  EKEventStore()
     
-    func requestAccessToCalendar(callback:@escaping permissionCallback){
+    func requestAccessToCalendar(callback:@escaping permissionCallback) {
         self.eventStore.requestAccess(to: .event) { (permission, error) in
-            if permission != true{
+            if permission != true {
                 callback(true)
-            }else{
+            }else {
                 callback(false)
             }
         }
     }
     
-    func fetchEvents(_ currentdate:CalendarDisplay) -> [EventDisplay]{
+    func fetchEvents(_ currentdate:CalendarDisplay) -> [EventDisplay] {
         var eventsList = [EventDisplay]()
         
-        if let date = currentdate.date{
+        if let date = currentdate.date {
             let calendars = self.eventStore.calendars(for: .event)
             
             let next = Calendar.current.date(byAdding: .day, value: 1, to: date)
@@ -41,12 +41,14 @@ class EventStore: IEventStore{
             let predicate = self.eventStore.predicateForEvents(withStart: date, end: next!, calendars:calendars)
             let events = self.eventStore.events(matching: predicate)
             
-            for eachEvent in events{
-                let newDisplay = EventDisplay(title: eachEvent.title, image: "", time:eachEvent.startDate.description)
+            for eachEvent in events {
+                let duration = eachEvent.endDate.timeIntervalSince(eachEvent.startDate)
+                
+                let newDisplay = EventDisplay(title: eachEvent.title, image: "", duration:duration, isAllDay: eachEvent.isAllDay, startTime: eachEvent.startDate)
                 eventsList.append(newDisplay)
             }
-            if eventsList.count == 0{
-                eventsList.append(EventDisplay(title: "None", image: "", time: ""))
+            if eventsList.count == 0 {
+                eventsList.append(EventDisplay(title: "None", image: "", isAllDay: false))
             }
         }
         return eventsList

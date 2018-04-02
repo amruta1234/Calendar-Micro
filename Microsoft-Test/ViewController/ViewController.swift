@@ -8,7 +8,7 @@
 
 import UIKit
 
-class ViewController: UIViewController{
+class ViewController: UIViewController {
 
     @IBOutlet weak var collectionView: UICollectionView!
     @IBOutlet weak var tableView: UITableView!
@@ -21,34 +21,34 @@ class ViewController: UIViewController{
     var viewModel: CalendarViewModel = CalendarViewModel(eventStore: EventStore())
     
     override func viewDidLoad() {
+        
         super.viewDidLoad()
         viewModel.delegate = self
         setupCollectionView()
         setupTableView()
-        
     }
     
     override func viewWillAppear(_ animated: Bool) {
         self.viewModel.requestAccessForCalendar()
     }
     
-    func setupTableView(){
+    func setupTableView() {
         self.tableView.register(UINib(nibName:"EventTableViewCell", bundle: nil), forCellReuseIdentifier: "eventCell")
         self.tableView.delegate = self
         self.tableView.dataSource = self
-        if let date = viewModel.currentDate.date{
+        if let date = viewModel.currentDate.date {
             offsetTableView(date: date)
         }
     }
     
-    func offsetTableView(date:Date){
-        if let path = viewModel.getOffsetForDate(date: date){
+    func offsetTableView(date:Date) {
+        if let path = viewModel.getOffsetForDate(date: date) {
             let eventPath = IndexPath(row: 0, section: path.row)
             self.tableView.scrollToRow(at: eventPath, at: .top, animated: true)
         }
     }
     
-    func setupCollectionView(){
+    func setupCollectionView() {
         collectionView.dataSource = self
         collectionView.delegate = self
         
@@ -57,35 +57,65 @@ class ViewController: UIViewController{
         let eachWidth = UIScreen.main.bounds.size.width/7
         
         var xOffset:CGFloat = 0.0
-        for eachWeekday in weekDays{
-            let label = UILabel(frame: CGRect(x:Int(xOffset), y:0, width: Int(eachWidth), height: 44))
+        for eachWeekday in weekDays {
+            let label = UILabel(frame: CGRect(x:Int(xOffset), y:0, width: Int(eachWidth), height: 30))
             label.text = eachWeekday
             label.textAlignment = .center
             self.weekdaysLabel.addSubview(label)
             xOffset = xOffset + eachWidth
         }
         
+        if let layout = collectionView.collectionViewLayout as? UICollectionViewFlowLayout {
+            layout.minimumLineSpacing = 0
+        }
+        
         //Show the current date
-        if let date = viewModel.currentDate.date{
+        if let date = self.viewModel.currentDate.date {
             self.reloadCalendarView(date: date)
             self.offsetCalendarView(date: date)
         }
     }
     
     //Update calendar collection view
-    func reloadCalendarView(date: Date){
+    func reloadCalendarView(date: Date) {
         viewModel.calendarRows = viewModel.getYearData(date: date)
         self.collectionView.reloadData()
     }
     
-    func offsetCalendarView(date: Date){
-        if let path = viewModel.getOffsetForDate(date: date){
+    func offsetCalendarView(date: Date) {
+        if let path = viewModel.getOffsetForDate(date: date) {
             collectionView.layoutIfNeeded()
             collectionView.scrollToItem(at: path, at: .centeredVertically, animated: true)
         }
     }
     
-
+//
+//    //Delegate callbacks
+//    func currentdateChangeCollectionView(_ date:CalendarDisplay){
+//        if let newDate = date.date{
+//            viewModel.currentDate.selected = false
+//            date.selected = true
+//            viewModel.currentDate = date
+//            offsetCalendarView(date: newDate)
+//            //TODO: only reload the cells not whole table view
+//            self.collectionView.reloadData()
+//        }
+//    }
+//
+//
+//    func currentDateChangeTableView(_ date:CalendarDisplay){
+//        if let newDate = date.date{
+//            viewModel.currentDate.selected = false
+//            date.selected = true
+//            viewModel.currentDate = date
+//            offsetTableView(date: newDate)
+//        }
+//    }
+//
+    func updateHeader(_ headerTxt: String) {
+        self.navigationItem.title = headerTxt
+    }
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
@@ -93,21 +123,21 @@ class ViewController: UIViewController{
 
 }
 
-extension ViewController: ViewControllerCallbacks{
+extension ViewController: ViewControllerCallbacks {
     func showCalendarPermissionAlert() {
         //TODO show alert view controller
     }
     
-    func currentDateUnslectedCallback(){
+    func currentDateUnslectedCallback() {
         viewModel.currentDate.selected = true
-        if let newDate = viewModel.currentDate.date{
+        if let newDate = viewModel.currentDate.date {
             offsetCalendarView(date: newDate)
             self.collectionView.reloadData()
             offsetTableView(date: newDate)
         }
     }
     
-    func currentDateSelectedCallback(){
+    func currentDateSelectedCallback() {
         viewModel.currentDate.selected = false
         self.collectionView.reloadData()
         

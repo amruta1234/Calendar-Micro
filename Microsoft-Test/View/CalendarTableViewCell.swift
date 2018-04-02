@@ -9,6 +9,6 @@
 import Foundation
 import UIKit
 
-class CalendarTableViewCell: UICollectionViewCell{
+class CalendarTableViewCell: UICollectionViewCell {
     @IBOutlet weak var dateLabel: UILabel!
 }

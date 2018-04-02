@@ -9,20 +9,26 @@
 import Foundation
 import XCTest
 
-class MockViewController: ViewControllerCallbacks{
+class MockViewController: ViewControllerCallbacks {
+    
     var showCalendarCalled = false
+    
+    
     func showCalendarPermissionAlert() {
         showCalendarCalled = true
     }
+    
     func currentDateUnslectedCallback() {}
+    
     func currentDateSelectedCallback() {}
 }
 
-class CalendarViewModelTests: XCTest{
+class CalendarViewModelTests: XCTest {
     
     var viewModel: CalendarViewModel!
     var mockEventStore: MockEventStore!
     var mockViewController: MockViewController!
+    
     
     override func setUp() {
         mockEventStore = MockEventStore()
@@ -32,19 +38,19 @@ class CalendarViewModelTests: XCTest{
         super.setUp()
     }
     
-    func testEventStoreRequestAccess(){
+    func testEventStoreRequestAccess() {
         viewModel.requestAccessForCalendar()
         mockEventStore.permission?(false)
         XCTAssert(mockViewController.showCalendarCalled == true, "When event store access not given , view controller alert not called")
     }
     
-    func testFetchEvents(){
+    func testFetchEvents() {
         mockEventStore.mockEvents = getTestEvents()
         let events = viewModel.fetchEvents(CalendarDisplay(date:Date()))
         XCTAssert(events.count == 2, "Events not passed properly")
     }
     
-    func testFetchGetYearData(){
+    func testFetchGetYearData() {
         let formatter = DateFormatter()
         formatter.dateFormat = "yyyy/MM/dd"
         let testDate = formatter.date(from: "2018/01/01")
@@ -52,12 +58,12 @@ class CalendarViewModelTests: XCTest{
         XCTAssert(dates.count == 366, "number of days in years not calculated properly")
     }
     
-    func testFetchGetNumberOfDays(){
+    func testFetchGetNumberOfDays() {
         let days = viewModel.getNumberOfDaysInMonth(month: 1, year: 2018)
         XCTAssert(days == 31, "Month days calculated wrong")
     }
     
-    func testWeekdayForFirstDate(){
+    func testWeekdayForFirstDate() {
         let formatter = DateFormatter()
         formatter.dateFormat = "yyyy/MM/dd"
         let testDate = formatter.date(from: "2017/12/31")
@@ -65,7 +71,7 @@ class CalendarViewModelTests: XCTest{
         XCTAssert(weekday == 2, "Weekday calculated wrongly")
     }
     
-    func testGetOffset(){
+    func testGetOffset() {
         let formatter = DateFormatter()
         formatter.dateFormat = "yyyy/MM/dd"
         let testDate = formatter.date(from: "2018/03/29")
@@ -75,10 +81,10 @@ class CalendarViewModelTests: XCTest{
     
     
     //MARK: Helpers
-    func getTestEvents() -> [EventDisplay]{
+    func getTestEvents() -> [EventDisplay] {
         var events = [EventDisplay]()
-        let event1 = EventDisplay(title: "test1", image: "", time: "")
-        let event2 = EventDisplay(title: "test2", image: "", time: "")
+        let event1 = EventDisplay(title: "test1", image: "")
+        let event2 = EventDisplay(title: "test2", image: "")
         events.append(event1)
         events.append(event2)
         return events
