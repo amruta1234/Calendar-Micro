@@ -19,12 +19,12 @@ protocol ViewControllerCallbacks: AnyObject{
 class CalendarViewModel {
     
     var calendarRows = [CalendarDisplay]()
-    var currentDate = CalendarDisplay(date: Date()){
+    var currentDate: CalendarDisplay{
         willSet {
-            self.delegate?.currentDateSelectedCallback()
+            self.delegate?.currentDateUnslectedCallback()
         }
         didSet {
-            self.delegate?.currentDateUnslectedCallback()
+            self.delegate?.currentDateSelectedCallback()
         }
     }
     let presentDate = CalendarDisplay(date: Date())
@@ -34,6 +34,8 @@ class CalendarViewModel {
     
     init(eventStore: IEventStore) {
         self.eventStore = eventStore
+        self.currentDate = CalendarDisplay(date: Date())
+        self.calendarRows = getYearData(date: Date())
     }
     
     func requestAccessForCalendar() {
@@ -71,6 +73,7 @@ class CalendarViewModel {
                 if newDate == currentDate {
                     newDate.selected = true
                     self.currentDate = newDate
+                    newDate.printDate()
                 }
                 calendarRows.append(newDate)
             }

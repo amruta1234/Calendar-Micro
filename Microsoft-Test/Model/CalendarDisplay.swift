@@ -86,13 +86,14 @@ class CalendarDisplay {
     
     func printDate() {
         print("\(day)-\(month)-\(year)-\(selected)")
+        print("DATE: \(date)")
     }
 }
 
 extension CalendarDisplay: Equatable {
     
     static func ==(lhs: CalendarDisplay, rhs: CalendarDisplay) -> Bool {
-        if lhs.day == rhs.day && lhs.month == rhs.month && lhs.year == rhs.year{
+        if lhs.day == rhs.day && lhs.month == rhs.month && lhs.year == rhs.year && lhs.date == rhs.date{
             return true
         }
         return false

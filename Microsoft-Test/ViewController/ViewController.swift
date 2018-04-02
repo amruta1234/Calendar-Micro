@@ -32,6 +32,7 @@ class ViewController: UIViewController {
         self.viewModel.requestAccessForCalendar()
     }
     
+    //MARK: View set up functions
     func setupTableView() {
         self.tableView.register(UINib(nibName:"EventTableViewCell", bundle: nil), forCellReuseIdentifier: "eventCell")
         self.tableView.delegate = self
@@ -41,6 +42,21 @@ class ViewController: UIViewController {
         }
     }
     
+    
+    func setupCollectionView() {
+        collectionView.dataSource = self
+        collectionView.delegate = self
+        
+        let calendarTitleView = CalendarTitleView(frame: CGRect(x:0, y:0, width: self.weekdaysLabel.frame.size.width, height: self.weekdaysLabel.frame.size.height))
+        self.weekdaysLabel.addSubview(calendarTitleView)
+
+        if let layout = collectionView.collectionViewLayout as? UICollectionViewFlowLayout {
+            layout.minimumLineSpacing = 0
+        }
+    }
+    
+    
+    //MARK: View offset functions
     func offsetTableView(date:Date) {
         if let path = viewModel.getOffsetForDate(date: date) {
             let eventPath = IndexPath(row: 0, section: path.row)
@@ -48,39 +64,6 @@ class ViewController: UIViewController {
         }
     }
     
-    func setupCollectionView() {
-        collectionView.dataSource = self
-        collectionView.delegate = self
-        
-        // Draw the weekday label
-        let weekDays = ["S", "M", "T", "W", "T", "F", "S"]
-        let eachWidth = UIScreen.main.bounds.size.width/7
-        
-        var xOffset:CGFloat = 0.0
-        for eachWeekday in weekDays {
-            let label = UILabel(frame: CGRect(x:Int(xOffset), y:0, width: Int(eachWidth), height: 30))
-            label.text = eachWeekday
-            label.textAlignment = .center
-            self.weekdaysLabel.addSubview(label)
-            xOffset = xOffset + eachWidth
-        }
-        
-        if let layout = collectionView.collectionViewLayout as? UICollectionViewFlowLayout {
-            layout.minimumLineSpacing = 0
-        }
-        
-        //Show the current date
-        if let date = self.viewModel.currentDate.date {
-            self.reloadCalendarView(date: date)
-            self.offsetCalendarView(date: date)
-        }
-    }
-    
-    //Update calendar collection view
-    func reloadCalendarView(date: Date) {
-        viewModel.calendarRows = viewModel.getYearData(date: date)
-        self.collectionView.reloadData()
-    }
     
     func offsetCalendarView(date: Date) {
         if let path = viewModel.getOffsetForDate(date: date) {
@@ -88,30 +71,7 @@ class ViewController: UIViewController {
             collectionView.scrollToItem(at: path, at: .centeredVertically, animated: true)
         }
     }
-    
-//
-//    //Delegate callbacks
-//    func currentdateChangeCollectionView(_ date:CalendarDisplay){
-//        if let newDate = date.date{
-//            viewModel.currentDate.selected = false
-//            date.selected = true
-//            viewModel.currentDate = date
-//            offsetCalendarView(date: newDate)
-//            //TODO: only reload the cells not whole table view
-//            self.collectionView.reloadData()
-//        }
-//    }
-//
-//
-//    func currentDateChangeTableView(_ date:CalendarDisplay){
-//        if let newDate = date.date{
-//            viewModel.currentDate.selected = false
-//            date.selected = true
-//            viewModel.currentDate = date
-//            offsetTableView(date: newDate)
-//        }
-//    }
-//
+
     func updateHeader(_ headerTxt: String) {
         self.navigationItem.title = headerTxt
     }
@@ -123,12 +83,13 @@ class ViewController: UIViewController {
 
 }
 
+//MARK: Callback functions from viewmodel
 extension ViewController: ViewControllerCallbacks {
     func showCalendarPermissionAlert() {
         //TODO show alert view controller
     }
     
-    func currentDateUnslectedCallback() {
+    func currentDateSelectedCallback() {
         viewModel.currentDate.selected = true
         if let newDate = viewModel.currentDate.date {
             offsetCalendarView(date: newDate)
@@ -137,9 +98,8 @@ extension ViewController: ViewControllerCallbacks {
         }
     }
     
-    func currentDateSelectedCallback() {
+    func currentDateUnslectedCallback() {
         viewModel.currentDate.selected = false
         self.collectionView.reloadData()
-        
     }
 }
