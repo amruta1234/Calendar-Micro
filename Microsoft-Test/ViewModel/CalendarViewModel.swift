@@ -73,7 +73,6 @@ class CalendarViewModel {
                 if newDate == currentDate {
                     newDate.selected = true
                     self.currentDate = newDate
-                    newDate.printDate()
                 }
                 calendarRows.append(newDate)
             }

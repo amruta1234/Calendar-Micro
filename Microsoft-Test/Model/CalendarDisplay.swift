@@ -49,7 +49,7 @@ class CalendarDisplay {
         
         let formatter = DateFormatter()
         formatter.dateFormat = "yyyy/MM/dd HH:mm:ss"
-        let date = formatter.date(from: "\(year)/\(month)/\(day) 00:00:00")
+        let date = formatter.date(from: "\(year)/\(month)/\(day) 12:00:01")
         return date
     }
     
@@ -82,11 +82,6 @@ class CalendarDisplay {
             return currDateString
         }
         return ""
-    }
-    
-    func printDate() {
-        print("\(day)-\(month)-\(year)-\(selected)")
-        print("DATE: \(date)")
     }
 }
 

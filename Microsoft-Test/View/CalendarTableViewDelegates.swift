@@ -90,6 +90,12 @@ extension ViewController: UITableViewDelegate {
         return nil
     }
     
+    func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
+        if expanded == true{
+            self.collapseCalendarView()
+        }
+    }
+    
     func scrollViewDidEndScrollingAnimation(_ scrollView: UIScrollView) {
         collectionTap = false
     }
@@ -106,10 +112,10 @@ extension ViewController: UITableViewDelegate {
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         
-        if collectionTap == false{
-            if let section = getPinnedSection(){
+        if collectionTap == false {
+            if let section = getPinnedSection() {
                 let date = viewModel.calendarRows[section]
-                if date != viewModel.currentDate{
+                if date != viewModel.currentDate {
                     viewModel.currentDate = date
                 }
             }

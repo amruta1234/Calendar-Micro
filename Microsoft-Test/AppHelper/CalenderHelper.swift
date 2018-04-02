@@ -9,6 +9,11 @@
 import Foundation
 import UIKit
 
+let Calendar_CollectionViewHeight_Expanded: CGFloat = 200.00
+let Calendar_CollectionViewHeight_Collapsed: CGFloat = CalenderHelper.getCalendarHeight()
+let sectionInsets = UIEdgeInsets(top: 1.0, left: 1.0, bottom: 0.0, right: 1.0)
+let itemsPerRow: CGFloat = 7
+
 struct Constants {
     struct COLORS {
         static let preColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0.51)
@@ -35,5 +40,12 @@ class CalenderHelper {
     
     class func getMonthString(_ month:Int) -> String {
         return self.monthsStringVal[month] ?? ""
+    }
+    
+    class func getCalendarHeight() -> CGFloat{
+       let paddingSpace = sectionInsets.left * (itemsPerRow + 1)
+        let availableWidth = UIScreen.main.bounds.size.width - paddingSpace
+        let widthPerItem = availableWidth / itemsPerRow
+        return widthPerItem
     }
 }

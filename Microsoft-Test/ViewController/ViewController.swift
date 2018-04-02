@@ -16,8 +16,10 @@ class ViewController: UIViewController {
     fileprivate let sectionInsets = UIEdgeInsets(top: 1.0, left: 1.0, bottom: 0.0, right: 1.0)
     fileprivate let itemsPerRow: CGFloat = 7
     var collectionTap = false
+    var expanded = true
 
-
+    @IBOutlet weak var collectionViewHeight: NSLayoutConstraint!
+    
     var viewModel: CalendarViewModel = CalendarViewModel(eventStore: EventStore())
     
     override func viewDidLoad() {
@@ -26,6 +28,16 @@ class ViewController: UIViewController {
         viewModel.delegate = self
         setupCollectionView()
         setupTableView()
+
+        //Navagation item tap
+        let gesture = UITapGestureRecognizer(target: self, action: #selector(navigationItemTapGesture))
+        self.navigationController?.navigationBar.isUserInteractionEnabled = true
+        self.navigationController?.navigationBar.addGestureRecognizer(gesture)
+        
+        //CollectionView pan gesture
+        let panGestureCollection = UIPanGestureRecognizer(target: self, action: #selector(pangestureCollectionView(recog:)))
+        self.collectionView.addGestureRecognizer(panGestureCollection)
+        
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -71,7 +83,49 @@ class ViewController: UIViewController {
             collectionView.scrollToItem(at: path, at: .centeredVertically, animated: true)
         }
     }
-
+    
+    
+    @objc func navigationItemTapGesture() {
+        if expanded == true{
+            collapseCalendarView()
+        }else{
+            expandCalendarView()
+        }
+    }
+    
+    @objc func pangestureCollectionView(recog: UIGestureRecognizer) {
+        if expanded == false{
+            expandCalendarView()
+        }
+    }
+    
+    @objc func pangestureTableView(recog: UIPanGestureRecognizer){
+        let translation = recog.translation(in: self.view)
+        print(translation)
+    }
+    
+    func expandCalendarView() {
+        self.collectionViewHeight.constant = Calendar_CollectionViewHeight_Expanded
+        expanded = true
+        animateCalendarViews()
+    }
+    
+    func collapseCalendarView() {
+        self.collectionViewHeight.constant = Calendar_CollectionViewHeight_Collapsed * 2 + 10
+        self.expanded = false
+        animateCalendarViews()
+    }
+    
+    func animateCalendarViews() {
+        UIView.animate(withDuration: 0.2, animations: {
+            self.view.layoutIfNeeded()
+        }) { (complete) in
+            if let currentDate = self.viewModel.currentDate.date{
+                self.offsetCalendarView(date: currentDate)
+            }
+        }
+    }
+    
     func updateHeader(_ headerTxt: String) {
         self.navigationItem.title = headerTxt
     }

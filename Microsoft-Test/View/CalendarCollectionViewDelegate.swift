@@ -9,8 +9,7 @@
 import Foundation
 import UIKit
 
-fileprivate let sectionInsets = UIEdgeInsets(top: 1.0, left: 1.0, bottom: 0.0, right: 1.0)
-fileprivate let itemsPerRow: CGFloat = 7
+
 
 
 extension ViewController: UICollectionViewDataSource {
